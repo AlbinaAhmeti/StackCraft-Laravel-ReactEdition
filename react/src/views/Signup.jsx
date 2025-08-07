@@ -1,8 +1,37 @@
+import { useRef } from "react";
 import { Link, Navigate, Outlet } from "react-router-dom";
+import { useStateContext } from "../contexts/ContextsProvider";
+import axiosClient from "../axios-client";
 
 export default function Signup() {
+  
+  const nameRef = useRef();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const passwordConfirmationRef = useRef();
+
+  const {setUser, setToken} = useStateContext()
+
   const onSubmit = (ev) => {
     ev.preventDefault();
+    const payload = {
+      name: nameRef.current.value,
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+      password_confirmation: passwordConfirmationRef.current.value,
+    }
+
+    axiosClient.post('/signup', payload)
+      .then(({data}) => {
+        setUser(data.user)
+        setToken(data.token)
+      })
+      .catch(err => {
+        const response = err.response;
+        if(response && response.status === 422){
+          console.log(response.data.errors);
+        }
+      })
   };
 
   return (
@@ -10,10 +39,10 @@ export default function Signup() {
       <div className="form">
         <form onSubmit={onSubmit}>
           <h1 className="title">Signup for free</h1>
-          <input type="fullname" placeholder="Full Name"></input>
-          <input type="email" placeholder="Email"></input>
-          <input type="password" placeholder="Password"></input>
-          <input type="password" placeholder="Password Confirmation"></input>
+          <input ref={nameRef} placeholder="Full Name"></input>
+          <input ref={emailRef} type="email" placeholder="Email"></input>
+          <input ref={passwordRef} type="password" placeholder="Password"></input>
+          <input ref={passwordConfirmationRef} type="password" placeholder="Password Confirmation"></input>
           <button className="btn btn-block">Sign up</button>
           <p className="message">
             Aready Registered? <Link to="/login">Sign in</Link>
@@ -22,4 +51,6 @@ export default function Signup() {
       </div>
     </div>
   );
+
+
 }
