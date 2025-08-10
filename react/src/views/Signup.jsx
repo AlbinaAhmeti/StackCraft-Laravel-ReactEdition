@@ -19,7 +19,7 @@ export default function Signup() {
       password: passwordRef.current.value,
       password_confirmation: passwordConfirmationRef.current.value,
     };
-console.log("POST to:", axiosClient.defaults.baseURL + "/signup");
+    console.log("POST to:", axiosClient.defaults.baseURL + "/signup");
 
     axiosClient
       .post("/signup", payload)
