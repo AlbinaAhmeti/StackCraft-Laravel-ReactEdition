@@ -1,6 +1,6 @@
 import { Link, Navigate, Outlet } from "react-router-dom";
 import { useRef, useState } from "react";
-import { useStateContext } from "../contexts/ContextsProvider";
+import { useStateContext } from "../context/ContextsProvider";
 import axiosClient from "../axios-client";
 
 export default function Login() {
